@@ -1,0 +1,28 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.7",
+        "axios": "^0.25",
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "postcss": "^8.4.14",
+        "tailwindcss": "^3.0.24",
+        "vue-loader": "^16.8.3"
+    },
+    "dependencies": {
+        "@revolist/vue-datagrid": "^3.1.6",
+        "@revolist/vue3-datagrid": "^3.1.0",
+        "alpinejs": "^3.10.2",
+        "tailwind": "^4.0.0",
+        "vue": "^3.2.36"
+    }
+}

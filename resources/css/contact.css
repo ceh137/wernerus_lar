@@ -1,0 +1,43 @@
+.card {
+    padding-right: 20px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1140px) {
+    .card {
+        padding-bottom: 35px;
+    }
+}
+
+.card__block {
+    margin-bottom: 20px;
+}
+
+.card__header {
+    text-transform: uppercase;
+    color: #5BC3EB;
+    font-size: 26px;
+}
+
+.card__accent {
+    color: #5BC3EB;
+}
+
+.card__hr {
+    margin: 26px 0;
+    width: 54px;
+    color: #5BC3EB;
+    background-color: #5BC3EB;
+    height: 1px;
+}
+.card__address {
+    text-transform: uppercase;
+    text-decoration: underline;
+}
+
+.card__uppercase {
+    text-transform: uppercase;
+}
+
+.card__link {
+    color: #363636 !important;
+}
