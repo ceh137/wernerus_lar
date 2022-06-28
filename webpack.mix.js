@@ -16,8 +16,5 @@ mix.js('resources/js/app.js', 'public/js').vue()
         require("tailwindcss"),
     ]);
 
-mix.postCss('resources/css/app.css', 'public/css', [
-   //
-]);
 
 

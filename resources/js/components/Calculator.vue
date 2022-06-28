@@ -361,11 +361,13 @@ uk-flex-center uk-grid" uk-grid="">
                             <div class="uk-margin-small"> <label for="INNsender"
                                                                  class="form-label uk-form-label">ИНН, если юр.
                                 лицо</label>
-                                <div class="uk-form-controls"> <input
+                                <div class="uk-form-controls">
+                                    <input
                                     v-model="payments.sender.INN"
                                     class="form-control uk-input" required=""
                                     name="INNsender" id="INNsender"
-                                    placeholder="ИНН" type="text"> </div>
+                                    placeholder="ИНН" type="text">
+                                </div>
                             </div>
                             <div class="uk-margin-small"> <label for="сompSender"
                                                                  class="form-label uk-form-label">Название компании</label>
@@ -781,7 +783,6 @@ uk-radio PayPRRtoAddress 3dparty"
                             class="uk-button uk-button-primary btn-order">ОТПРАВИТЬ</button>
                 </div>
             </div>
-            <button v-on:click="saveCities">Сохранить города</button>
             <input id="stretch_price" type="hidden"> <input
             id="rigid_pac_price" type="hidden"> <input id="bort_price"
                                                        type="hidden"> <input id="TT_price" type="hidden"> <input
@@ -800,6 +801,12 @@ uk-radio PayPRRtoAddress 3dparty"
 <script>
 export default {
     name: "Calculator",
+    props: {
+       order: {
+           default: {},
+           type: Object
+       }
+    },
     data() {
         return {
             cargo_type: '',
@@ -946,12 +953,7 @@ export default {
         }
     },
     methods: {
-        saveCities() {
-            axios.post('/route_save', {data : this.to_cities, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            }).then(function (response) {
-                console.log(response);
-            })
-        },
+
         submitForm() {
             if (this.validatePrice()) {
                 let selFromCity = '';
@@ -967,11 +969,14 @@ export default {
                         selFromCity = this.from_cities[city].name;
                         break;
                     }
+                };
+                if (this.comment) {
+                    this.comment = this.comment.replace('#', ' ');
+                    this.comment = this.comment.replace('&', ' ');
+                    this.comment = this.comment.replace('%', ' ');
+                    this.comment = this.comment.replace('$', ' ');
                 }
-                this.comment = this.comment.replace('#', ' ');
-                this.comment = this.comment.replace('&', ' ');
-                this.comment = this.comment.replace('%', ' ');
-                this.comment = this.comment.replace('$', ' ');
+
                 let dataToSubmit = {
                     date_to: this.date_to,
                     date_from: this.date_from,
@@ -1015,11 +1020,22 @@ export default {
                     comment: this.comment,
                 };
                 console.log(dataToSubmit)
+                if (window.location.pathname.split("/").pop() == 'edit') {
+                    axios.put('/admin/orders/'+this.order.id, {
+                        data: dataToSubmit,
+                        _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    }).then(function (response) {
+                        console.log(response);
+                        window.location.href = '/admin/orders/';
+                    })
+                } else {
+                    axios.post('/order', {data : dataToSubmit, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    }).then(function (response) {
+                        console.log(response);
+                        window.location.href = '/';
+                    })
+                }
 
-                axios.post('/order', {data : dataToSubmit, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                }).then(function (response) {
-                    console.log(response);
-                })
             } else {
                 this.warning = 'Наверное вы забыли выбрать что-то из оплаты';
             }
@@ -1346,7 +1362,7 @@ export default {
             } else if (!(city1+'to'+city2+'express' in array) || city1+'to'+city2 in array) {
                 this.express = false;
                 this.noExpress = true;
-                document.getElementById('Ecorad').checked = true;
+                // document.getElementById('Ecorad').checked = true;
                 key = city1+'to'+city2+'econom';
                 if (city1+'to'+city2 in array) {
                     return array[city1+'to'+city2]
@@ -2168,27 +2184,33 @@ export default {
                 difference = 4;
             }
             if (count == 1) {
-                let arr1 = this.from_time_from_addr.split(':');
-                let h1 = parseInt(arr1[0]) + difference;
-                let m1 = arr1[1];
-                if (h1 >= 24) {
-                    h1 = h1 % 24;
+                if (this.from_time_from_addr) {
+                    let arr1 = this.from_time_from_addr.split(':');
+                    let h1 = parseInt(arr1[0]) + difference;
+                    let m1 = arr1[1];
+                    if (h1 >= 24) {
+                        h1 = h1 % 24;
+                    }
+                    if (h1<10) {
+                        h1 = '0'+h1;
+                    }
+                    this.to_time_from_addr = h1+':'+m1;
                 }
-                if (h1<10) {
-                    h1 = '0'+h1;
-                }
-                this.to_time_from_addr = h1+':'+m1;
+
             } else {
-                let arr2 = this.from_time_to_addr.split(':');
-                let h2 = parseInt(arr2[0]) + difference;
-                let m2 = arr2[1];
-                if (h2 >= 24) {
-                    h2 = h2 % 24;
+                if (this.from_time_to_addr) {
+                    let arr2 = this.from_time_to_addr.split(':');
+                    let h2 = parseInt(arr2[0]) + difference;
+                    let m2 = arr2[1];
+                    if (h2 >= 24) {
+                        h2 = h2 % 24;
+                    }
+                    if (h2<10) {
+                        h2 = '0'+h2;
+                    }
+                    this.to_time_to_addr = h2+':'+m2;
                 }
-                if (h2<10) {
-                    h2 = '0'+h2;
-                }
-                this.to_time_to_addr = h2+':'+m2;
+
             }
 
         },
@@ -2330,7 +2352,7 @@ export default {
             }
         },
         payAllChosen() {
-            return this.payments.sender.pay_all || this.payments.receiver.pay_all || this.payments.third_party.pay_all
+            return this.payments.sender.pay_all === true || this.payments.receiver.pay_all === true || this.payments.third_party.pay_all === true;
         },
         to_addr_selected()   {
             return this.with_addr_to;
@@ -2347,14 +2369,73 @@ export default {
 
     },
     created() {
-        this.calculator();
-        this.getDepTimeExpress();
-        this.getDepTimeEconom();
-        this.timer();
-        this.dateManage();
-        setInterval(this.timer, 1000 * 60);
-        this.payments;
-        this.sortCities();
+        console.log(this.order !== {}, this.order === {})
+        if (!this.order.hasOwnProperty('payments')) {
+            this.getDepTimeExpress();
+            this.getDepTimeEconom();
+            this.timer();
+            this.dateManage();
+            setInterval(this.timer, 1000 * 60);
+            this.payments;
+            this.payAllChosen;
+            this.sortCities();
+            this.calculator();
+            this.logInputKg();
+            this.logInputHeaviest();
+            this.logInputLongest();
+            this.logInputPieces();
+            this.logInputM();
+
+        } else {
+            console.log(this.order);
+            this.payments = this.order.payments;
+            this.cargo_type = this.order.cargo_type.name;
+            this.comment = this.order.comment;
+            this.date_to = this.order.date_del_to_addr;
+            this.date_from = this.order.date_del_from_addr;
+            this.from_time_from_addr = this.order.del_from_addr_time_from;
+            this.to_time_from_addr = this.order.del_from_addr_time_to;
+            this.from_time_to_addr = this.order.del_to_addr_time_from;
+            this.to_time_to_addr = this.order.del_to_addr_time_to;
+            this.selected_from_city = this.order.route.city_from.code;
+            this.selected_to_city = this.order.route.city_to.code;
+            this.kg = this.order.weight;
+            this.meters = this.order.volume;
+            this.pieces = this.order.pieces;
+            this.heaviest = this.order.heaviest;
+            this.longest = this.order.longest;
+            this.to_fixed_time = this.order.to_fixed_time;
+            this.from_fixed_time = this.order.from_fixed_time;
+            this.rig_pac = this.order.rig_pac == 1;
+            this.stretch_pac = this.order.stretch_pac == 1;
+            this.bort_pac = this.order.bort_pac == 1;
+            this.insurance = this.order.insurance == 1;
+            this.with_addr_from = this.order.from_addr == 1;
+            this.with_addr_to = this.order.to_addr == 1;
+            this.PRR_to_addr = this.order.prr_to_addr == 1;
+            this.PRR_from_addr = this.order.prr_from_addr == 1;
+            this.express = this.order.method.name == 'ЭКСПРЕСС';
+            this.econom = this.order.method.name == 'ЭКОНОМ';
+            this.addressFrom = this.order.address_from;
+            this.addressTo = this.order.address_to;
+            console.log(this.selected_to_city, this.selected_from_city);
+            console.log(this.$data);
+
+            this.getDepTimeExpress();
+            this.getDepTimeEconom();
+            this.timer();
+            this.dateManage();
+            setInterval(this.timer, 1000 * 60);
+            this.payments;
+            this.payAllChosen;
+            this.sortCities();
+            this.calculator();
+            this.logInputKg();
+            this.logInputHeaviest();
+            this.logInputLongest();
+            this.logInputPieces();
+            this.logInputM();
+        }
     },
     watch:  {
         payments: {

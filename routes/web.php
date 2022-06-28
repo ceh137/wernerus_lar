@@ -28,6 +28,8 @@ Route::get('/contacts', [IndexController::class, 'contacts'])->name('contacts');
 Route::get('/account', [\App\Http\Controllers\AccountController::class, 'account'])->middleware(['auth'])->name('account');
 
 Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\EnsureUserIsAdmin::class)->group(function ()  {
-    Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index']);
+    Route::resource('/orders', App\Http\Controllers\Admin\OrderController::class)->names('orders.*');
+
+
 
 });

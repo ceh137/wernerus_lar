@@ -22507,6 +22507,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Calculator",
+  props: {
+    order: {
+      "default": {},
+      type: Object
+    }
+  },
   data: function data() {
     return {
       cargo_type: '',
@@ -22651,14 +22657,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    saveCities: function saveCities() {
-      axios.post('/route_save', {
-        data: this.to_cities,
-        _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      }).then(function (response) {
-        console.log(response);
-      });
-    },
     submitForm: function submitForm() {
       if (this.validatePrice()) {
         var selFromCity = '';
@@ -22678,10 +22676,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }
 
-        this.comment = this.comment.replace('#', ' ');
-        this.comment = this.comment.replace('&', ' ');
-        this.comment = this.comment.replace('%', ' ');
-        this.comment = this.comment.replace('$', ' ');
+        ;
+
+        if (this.comment) {
+          this.comment = this.comment.replace('#', ' ');
+          this.comment = this.comment.replace('&', ' ');
+          this.comment = this.comment.replace('%', ' ');
+          this.comment = this.comment.replace('$', ' ');
+        }
+
         var dataToSubmit = {
           date_to: this.date_to,
           date_from: this.date_from,
@@ -22725,12 +22728,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           comment: this.comment
         };
         console.log(dataToSubmit);
-        axios.post('/order', {
-          data: dataToSubmit,
-          _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }).then(function (response) {
-          console.log(response);
-        });
+
+        if (window.location.pathname.split("/").pop() == 'edit') {
+          axios.put('/admin/orders/' + this.order.id, {
+            data: dataToSubmit,
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }).then(function (response) {
+            console.log(response);
+            window.location.href = '/admin/orders/';
+          });
+        } else {
+          axios.post('/order', {
+            data: dataToSubmit,
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          }).then(function (response) {
+            console.log(response);
+            window.location.href = '/';
+          });
+        }
       } else {
         this.warning = 'Наверное вы забыли выбрать что-то из оплаты';
       }
@@ -23113,8 +23128,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return array[key];
       } else if (!(city1 + 'to' + city2 + 'express' in array) || city1 + 'to' + city2 in array) {
         this.express = false;
-        this.noExpress = true;
-        document.getElementById('Ecorad').checked = true;
+        this.noExpress = true; // document.getElementById('Ecorad').checked = true;
+
         key = city1 + 'to' + city2 + 'econom';
 
         if (city1 + 'to' + city2 in array) {
@@ -24042,33 +24057,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       if (count == 1) {
-        var arr1 = this.from_time_from_addr.split(':');
-        var h1 = parseInt(arr1[0]) + difference;
-        var m1 = arr1[1];
+        if (this.from_time_from_addr) {
+          var arr1 = this.from_time_from_addr.split(':');
+          var h1 = parseInt(arr1[0]) + difference;
+          var m1 = arr1[1];
 
-        if (h1 >= 24) {
-          h1 = h1 % 24;
+          if (h1 >= 24) {
+            h1 = h1 % 24;
+          }
+
+          if (h1 < 10) {
+            h1 = '0' + h1;
+          }
+
+          this.to_time_from_addr = h1 + ':' + m1;
         }
-
-        if (h1 < 10) {
-          h1 = '0' + h1;
-        }
-
-        this.to_time_from_addr = h1 + ':' + m1;
       } else {
-        var arr2 = this.from_time_to_addr.split(':');
-        var h2 = parseInt(arr2[0]) + difference;
-        var m2 = arr2[1];
+        if (this.from_time_to_addr) {
+          var arr2 = this.from_time_to_addr.split(':');
+          var h2 = parseInt(arr2[0]) + difference;
+          var m2 = arr2[1];
 
-        if (h2 >= 24) {
-          h2 = h2 % 24;
+          if (h2 >= 24) {
+            h2 = h2 % 24;
+          }
+
+          if (h2 < 10) {
+            h2 = '0' + h2;
+          }
+
+          this.to_time_to_addr = h2 + ':' + m2;
         }
-
-        if (h2 < 10) {
-          h2 = '0' + h2;
-        }
-
-        this.to_time_to_addr = h2 + ':' + m2;
       }
     },
     choosePayment: function choosePayment(payer) {
@@ -24248,7 +24267,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     payAllChosen: function payAllChosen() {
-      return this.payments.sender.pay_all || this.payments.receiver.pay_all || this.payments.third_party.pay_all;
+      return this.payments.sender.pay_all === true || this.payments.receiver.pay_all === true || this.payments.third_party.pay_all === true;
     },
     to_addr_selected: function to_addr_selected() {
       return this.with_addr_to;
@@ -24264,14 +24283,72 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   created: function created() {
-    this.calculator();
-    this.getDepTimeExpress();
-    this.getDepTimeEconom();
-    this.timer();
-    this.dateManage();
-    setInterval(this.timer, 1000 * 60);
-    this.payments;
-    this.sortCities();
+    console.log(this.order !== {}, this.order === {});
+
+    if (!this.order.hasOwnProperty('payments')) {
+      this.getDepTimeExpress();
+      this.getDepTimeEconom();
+      this.timer();
+      this.dateManage();
+      setInterval(this.timer, 1000 * 60);
+      this.payments;
+      this.payAllChosen;
+      this.sortCities();
+      this.calculator();
+      this.logInputKg();
+      this.logInputHeaviest();
+      this.logInputLongest();
+      this.logInputPieces();
+      this.logInputM();
+    } else {
+      console.log(this.order);
+      this.payments = this.order.payments;
+      this.cargo_type = this.order.cargo_type.name;
+      this.comment = this.order.comment;
+      this.date_to = this.order.date_del_to_addr;
+      this.date_from = this.order.date_del_from_addr;
+      this.from_time_from_addr = this.order.del_from_addr_time_from;
+      this.to_time_from_addr = this.order.del_from_addr_time_to;
+      this.from_time_to_addr = this.order.del_to_addr_time_from;
+      this.to_time_to_addr = this.order.del_to_addr_time_to;
+      this.selected_from_city = this.order.route.city_from.code;
+      this.selected_to_city = this.order.route.city_to.code;
+      this.kg = this.order.weight;
+      this.meters = this.order.volume;
+      this.pieces = this.order.pieces;
+      this.heaviest = this.order.heaviest;
+      this.longest = this.order.longest;
+      this.to_fixed_time = this.order.to_fixed_time;
+      this.from_fixed_time = this.order.from_fixed_time;
+      this.rig_pac = this.order.rig_pac == 1;
+      this.stretch_pac = this.order.stretch_pac == 1;
+      this.bort_pac = this.order.bort_pac == 1;
+      this.insurance = this.order.insurance == 1;
+      this.with_addr_from = this.order.from_addr == 1;
+      this.with_addr_to = this.order.to_addr == 1;
+      this.PRR_to_addr = this.order.prr_to_addr == 1;
+      this.PRR_from_addr = this.order.prr_from_addr == 1;
+      this.express = this.order.method.name == 'ЭКСПРЕСС';
+      this.econom = this.order.method.name == 'ЭКОНОМ';
+      this.addressFrom = this.order.address_from;
+      this.addressTo = this.order.address_to;
+      console.log(this.selected_to_city, this.selected_from_city);
+      console.log(this.$data);
+      this.getDepTimeExpress();
+      this.getDepTimeEconom();
+      this.timer();
+      this.dateManage();
+      setInterval(this.timer, 1000 * 60);
+      this.payments;
+      this.payAllChosen;
+      this.sortCities();
+      this.calculator();
+      this.logInputKg();
+      this.logInputHeaviest();
+      this.logInputLongest();
+      this.logInputPieces();
+      this.logInputM();
+    }
   },
   watch: {
     payments: {
@@ -27371,7 +27448,7 @@ var _hoisted_297 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStatic
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[125] || (_cache[125] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {}, ["prevent"])),
+    onSubmit: _cache[124] || (_cache[124] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {}, ["prevent"])),
     action: "sendinfo.php",
     method: "post",
     "class": "odrer-form",
@@ -28468,11 +28545,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "button",
     "class": "uk-button uk-button-primary btn-order"
-  }, "ОТПРАВИТЬ")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: _cache[124] || (_cache[124] = function () {
-      return $options.saveCities && $options.saveCities.apply($options, arguments);
-    })
-  }, "Сохранить города"), _hoisted_297], 32
+  }, "ОТПРАВИТЬ")])]), _hoisted_297], 32
   /* HYDRATE_EVENTS */
   )]);
 }
@@ -50109,12 +50182,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 /*!*******************************!*\
   !*** ./resources/css/app.css ***!
   \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/postcss-loader/dist/cjs.js):\nError: Cannot find module 'color'\nRequire stack:\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/tailwind.config.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/tailwindcss/lib/lib/setupTrackingContext.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/tailwindcss/lib/index.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/webpack.mix.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/laravel-mix/setup/webpack.config.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack-cli/lib/webpack-cli.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack-cli/lib/bootstrap.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack-cli/bin/cli.js\n- /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack/bin/webpack.js\n    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:902:15)\n    at Function.Module._load (internal/modules/cjs/loader.js:746:27)\n    at Module.require (internal/modules/cjs/loader.js:974:19)\n    at require (internal/modules/cjs/helpers.js:92:18)\n    at Object.<anonymous> (/Users/arsenijbajbakov/Desktop/dev/werner_laravel/tailwind.config.js:3:15)\n    at Module._compile (internal/modules/cjs/loader.js:1085:14)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1114:10)\n    at Module.load (internal/modules/cjs/loader.js:950:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:790:14)\n    at Module.require (internal/modules/cjs/loader.js:974:19)\n    at processResult (/Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack/lib/NormalModule.js:758:19)\n    at /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/webpack/lib/NormalModule.js:860:5\n    at /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/loader-runner/lib/LoaderRunner.js:400:11\n    at /Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/loader-runner/lib/LoaderRunner.js:252:18\n    at context.callback (/Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/loader-runner/lib/LoaderRunner.js:124:13)\n    at Object.loader (/Users/arsenijbajbakov/Desktop/dev/werner_laravel/node_modules/postcss-loader/dist/index.js:142:7)");
 
 /***/ }),
 
@@ -50713,42 +50783,7 @@ function compileToFunction(template, options) {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/chunk loaded */
-/******/ 	(() => {
-/******/ 		var deferred = [];
-/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
-/******/ 			if(chunkIds) {
-/******/ 				priority = priority || 0;
-/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
-/******/ 				deferred[i] = [chunkIds, fn, priority];
-/******/ 				return;
-/******/ 			}
-/******/ 			var notFulfilled = Infinity;
-/******/ 			for (var i = 0; i < deferred.length; i++) {
-/******/ 				var [chunkIds, fn, priority] = deferred[i];
-/******/ 				var fulfilled = true;
-/******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
-/******/ 						chunkIds.splice(j--, 1);
-/******/ 					} else {
-/******/ 						fulfilled = false;
-/******/ 						if(priority < notFulfilled) notFulfilled = priority;
-/******/ 					}
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferred.splice(i--, 1)
-/******/ 					var r = fn();
-/******/ 					if (r !== undefined) result = r;
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -50810,68 +50845,13 @@ function compileToFunction(template, options) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		// no baseURI
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			"/js/app": 0,
-/******/ 			"css/app": 0
-/******/ 		};
-/******/ 		
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime] = data;
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
-/******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 					}
-/******/ 				}
-/******/ 				if(runtime) var result = runtime(__webpack_require__);
-/******/ 			}
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					installedChunks[chunkId][0]();
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			return __webpack_require__.O(result);
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/css/app.css")))
-/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	__webpack_require__("./resources/js/app.js");
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./resources/css/app.css");
 /******/ 	
 /******/ })()
 ;

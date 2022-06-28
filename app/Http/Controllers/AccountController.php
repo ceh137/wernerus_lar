@@ -23,7 +23,7 @@ class AccountController extends Controller
                 'cargo_type',
                 'who_pays',
                 'files',
-                'type',
+                'method',
                 'status'
             ])->get();
         return view('index.account', compact('orders'));

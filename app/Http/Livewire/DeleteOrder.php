@@ -34,7 +34,7 @@ class DeleteOrder extends ModalComponent
         $this->order->delete();
 
         $this->closeModalWithEvents([
-            'pg:eventRefresh-index_table',
+            'pg:eventRefresh-application_table',
         ]);
 
 

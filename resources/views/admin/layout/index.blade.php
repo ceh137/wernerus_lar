@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html :class="" x-data="data()" lang="en">
+<html  x-data="data()" lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Windmill Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Admin Panel</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     />
 {{--    <script src="{{ asset('js/app.js') }}"></script>--}}
     <script src="https://cdn.tailwindcss.com"></script>
-
-{{--    <script src="{{ asset('js/app.js') }}"></script>--}}
+    @if(request()->route()->getName() != 'admin.orders.*.edit')
     @livewireStyles
     @powerGridStyles
     @livewireScripts
     @wireUiScripts
 
-
     @powerGridScripts
-
+    @elseif(request()->route()->getName() == 'admin.orders.*.edit')
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
+        <!--        <link rel="stylesheet" href="css/uikit.min.css" />-->
+        <!--        <script src="js/uikit.min.js"></script>-->
+        <!--        <script src="js/uikit-icons.min.js"></script>-->
+        <link rel="stylesheet" href="{{ asset('css/uikit.css') }}" />
+        <script src=" {{asset('js/uikit.js')}}"></script>
+        <script src="{{ asset('js/uikit-icons.js') }}"></script>
+    @endif
 </head>
 <body>
 <div
@@ -826,13 +833,23 @@
                 </ul>
             </div>
         </header>
-        <main class="h-full overflow-y-auto">
-           @yield('content')
+        <main  class="h-full overflow-y-auto">
+<div id="app">
+    @yield('content')
+</div>
+
+
         </main>
     </div>
 </div>
 
-@livewire('livewire-ui-modal')
+@if(request()->route()->getName() == 'admin.orders.*.edit')
 
+<script src="{{ asset('js/arrays.js') }}"></script>
+<script src="{{ asset('js/ADarrays.js') }}"></script>
+<script src="{{ asset('js/app.js') }}"></script>
+@else
+    @livewire('livewire-ui-modal')
+@endif
 </body>
 </html>

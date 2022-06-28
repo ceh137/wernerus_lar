@@ -11,6 +11,7 @@ class Order extends Model
     protected $fillable = [
                 'method_id',
                 'route_id',
+                'order_num',
                 'delivery_type',
                 'weight' ,
                 'volume' ,
@@ -39,6 +40,15 @@ class Order extends Model
                 'filled_at_terminal',
                 'status_id' ,
                 'files_id',
+                'del_from_addr_time_from',
+                'del_from_addr_time_to',
+                'del_to_addr_time_from',
+                'del_to_addr_time_to',
+                'date_del_to_addr',
+                'date_del_from_addr',
+                'address_to',
+                'address_from',
+                'time_to_order',
             ];
 
     public function order_prices() {
@@ -58,13 +68,13 @@ class Order extends Model
     }
 
     public function sender_comp() {
-        return $this->hasOne(Company::class, 'id', 'sender_comp_id');
+        return $this->hasOne(Company::class, 'id', 'sender_company_id');
     }
     public function receiver_comp() {
-        return $this->hasOne(Company::class, 'id', 'receiver_comp_id');
+        return $this->hasOne(Company::class, 'id', 'receiver_company_id');
     }
     public function tp_comp() {
-        return $this->hasOne(Company::class, 'id', 'tp_comp_id');
+        return $this->hasOne(Company::class, 'id', 'tp_company_id');
     }
 
     public function cargo_type() {
@@ -79,8 +89,8 @@ class Order extends Model
         return $this->hasOne(File::class, 'id', 'files_id');
     }
 
-    public function type() {
-        return $this->hasOne(Type::class, 'id', 'type_id');
+    public function method() {
+        return $this->hasOne(Method::class, 'id', 'method_id');
     }
 
     public function status() {

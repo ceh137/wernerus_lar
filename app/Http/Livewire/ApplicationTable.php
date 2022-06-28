@@ -25,13 +25,13 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGridEloquent,
     Traits\Listeners};
 
-final class IndexTable extends PowerGridComponent
+final class ApplicationTable extends PowerGridComponent
 {
     use ActionButton;
     use Listeners;
-    public string $tableName = 'index_table';
+    public string $tableName = 'application_table';
     public string $primaryKey = 'id';
-    public string $sortField = 'methods.id';
+    public string $sortField = 'orders.created_at';
     public string $delivery_type = "delivery_type";
     public string $address_from = "address_from";
 
@@ -79,7 +79,7 @@ final class IndexTable extends PowerGridComponent
                 ->showRecordCount(),
 
             Detail::make()
-                ->view('components.order_detail')
+                ->view('components.application_detail')
                 ->options()
                 ->showCollapseIcon(),
         ];
@@ -115,6 +115,7 @@ final class IndexTable extends PowerGridComponent
     public function datasource(): Builder
     {
         return Order::query()
+            ->where('orders.status_id','=', 1)
             ->leftJoin('methods', 'orders.method_id', '=', 'methods.id')
             ->leftJoin('routes', 'orders.route_id', '=', 'routes.id')
             ->leftJoin('cities as to', 'routes.to_city_id', '=', 'to.id')
@@ -142,7 +143,7 @@ final class IndexTable extends PowerGridComponent
                 'receiver_company.name as receiver_name',
                 'tp_company.name as tp_name',
                 'methods.name as method',
-                'methods.id as method_id',
+//                'methods.id as method_id',
                 'to.name as to_city',
                 'from.name as from_city',
                 'types.name as type',
@@ -278,14 +279,14 @@ final class IndexTable extends PowerGridComponent
                 ->makeInputText('receiver_company.INN')
                 ->sortable(),
 
-            Column::make('Третье Лицо', 'tp')
-                ->searchable()
-                ->makeInputText('tp.name')
-                ->sortable(),
-            Column::make('ИНН ТЛ', 'tpINN')
-                ->searchable()
-                ->makeInputText('tp_company.INN')
-                ->sortable(),
+//            Column::make('Третье Лицо', 'tp')
+//                ->searchable()
+//                ->makeInputText('tp.name')
+//                ->sortable(),
+//            Column::make('ИНН ТЛ', 'tpINN')
+//                ->searchable()
+//                ->makeInputText('tp_company.INN')
+//                ->sortable(),
 
             Column::make('Итого', 'total')
                 ->searchable()
@@ -322,7 +323,7 @@ final class IndexTable extends PowerGridComponent
        return [
            Button::make('edit', 'Ред.')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-                ->openModal('edit-order', ['id' => 'id'])
+               ->route('admin.orders.*.edit', ['order' => 'id'])
            ,
 
            Button::make('destroy', 'Удалить')
@@ -332,6 +333,7 @@ final class IndexTable extends PowerGridComponent
 
             Button::make('to_order', 'Сформ. заказ')
                 ->class('bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
+                ->openModal('application-to-order-modal', ['id' => 'id'])
 
         ];
     }
