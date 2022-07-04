@@ -36,8 +36,8 @@
                             <div class="form-ttl">Отследить груз</div>
                         </div>
                         <div class="uk-grid-item-match uk-width-expand@m">
-                            <form class="uk-search uk-search-default uk-flex">
-                                <input class="uk-search-input" type="search" placeholder="Номер отправления 200******">
+                            <form class="uk-search uk-search-default uk-flex" method="get" action="{{ route('status') }}">
+                                <input class="uk-search-input" name="order_num" type="search" placeholder="Номер отправления 200******">
                                 <button class="uk-button uk-button-primary" type="submit">Найти</button>
                             </form>
                         </div>

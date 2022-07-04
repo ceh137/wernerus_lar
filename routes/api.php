@@ -18,9 +18,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/order/cities_to', [\App\Http\Controllers\Api\Order::class, 'cities_to'])->name('order.cities_to');
-Route::get('/order/cities_from', [\App\Http\Controllers\Api\Order::class, 'cities_from'])->name('order.cities_from');
-//Route::get('/order/types', [\App\Http\Controllers\Api\Order::class, 'types'])->name('order.types');
+Route::get('/order_application/cities_to', [\App\Http\Controllers\Api\Order::class, 'cities_to'])->name('order_application.cities_to');
+Route::get('/order_application/cities_from', [\App\Http\Controllers\Api\Order::class, 'cities_from'])->name('order_application.cities_from');
+//Route::get('/order_application/types', [\App\Http\Controllers\Api\Order::class, 'types'])->name('order_application.types');
 
 
 

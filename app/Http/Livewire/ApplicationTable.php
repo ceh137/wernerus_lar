@@ -323,7 +323,7 @@ final class ApplicationTable extends PowerGridComponent
        return [
            Button::make('edit', 'Ред.')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('admin.orders.*.edit', ['order' => 'id'])
+               ->route('admin.application.edit', ['application' => 'id'])
            ,
 
            Button::make('destroy', 'Удалить')
@@ -360,7 +360,7 @@ final class ApplicationTable extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn($order) => $order->id === 1)
+                ->when(fn($order_application) => $order_application->id === 1)
                 ->hide(),
         ];
     }

@@ -22742,8 +22742,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             data: dataToSubmit,
             _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           }).then(function (response) {
-            console.log(response);
+            console.log(response.data);
+            alert(response.data);
             window.location.href = '/';
+          })["catch"](function (response) {
+            console.log(response.data);
+            alert(response.data);
           });
         }
       } else {

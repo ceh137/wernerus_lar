@@ -12,7 +12,7 @@ body #section-02 .grid-our-advantages {
 }
 .tm-header-mobile .uk-navbar .uk-navbar-toggle svg {
     width: 27px;
-    height: 27px; 
+    height: 27px;
     color: #5BC3EB;
 }
 body .tm-header-mobile .uk-nav-default a {
@@ -87,7 +87,7 @@ body #section-01 .banners-grid {
     margin-top: 40px;
 }
 body .hdr-login {
-    margin-left: 20px;  
+    margin-left: 20px;
     display: flex;
     align-items: center;
 }
@@ -104,7 +104,7 @@ body .uk-navbar-item, body .uk-navbar-nav >li>a, body .uk-navbar-toggle {
     font-family: 'Montserrat', sans-serif;
     min-height: 46px;
     padding: 0 20px;
-    text-decoration: none; 
+    text-decoration: none;
     font-weight: normal;
     font-size: 15px;
     letter-spacing: 0.05em;
@@ -253,7 +253,7 @@ body .uk-radio:checked, body .uk-checkbox:checked {
     background-size: 40px;
 }
 .calc-widget .form-check-label, .form-row-check .form-check-label{
-    margin-left: 10px;  
+    margin-left: 10px;
     cursor: pointer;
 }
 .calc-widget .form-range{
@@ -270,7 +270,7 @@ body .uk-radio:checked, body .uk-checkbox:checked {
 }
 .calc-widget .uk-button.btn-order{
     line-height: 56px;
-    font-size: 21px;  
+    font-size: 21px;
     margin-top: 5px;
     max-width: 300px;
 }
@@ -297,7 +297,7 @@ body .uk-input, body .uk-select:not([multiple]):not([size]) {
     height: 46px;
     border: 1px solid #5BC3EB;
     box-sizing: border-box;
-    border-radius: 9px;  
+    border-radius: 9px;
     font-size: 16px;
     line-height: 158.2%;
     color: #363636;
@@ -311,7 +311,7 @@ body .uk-select:not([multiple]):not([size]) {
 	background: url(/images/ic-switch.png) no-repeat;
     display: block;
     width: 20px;
-    height: 20px; 
+    height: 20px;
     padding: 0;
 }
 .uk-row-full{
@@ -351,7 +351,7 @@ body #section-footer .uk-navbar-nav li a{
     font-size: 14px;
     line-height: 17px;
     letter-spacing: 0.05em;
-    text-transform: uppercase;  
+    text-transform: uppercase;
     padding: 0 12px;
     color: #FFFFFF;
 }
@@ -383,7 +383,7 @@ body #section-footer .uk-navbar-nav li a{
 #section-02 .grid-our-advantages .uk-card{
     padding: 0 0 0 60px;
 }
-#section-01, #section-01 .uk-container, 
+#section-01, #section-01 .uk-container,
 #section-order, #section-order .uk-container{position:relative;}
 #section-01:before, #section-order:before{
     content: '';
@@ -421,7 +421,7 @@ body .uk-button-primary:focus, body .uk-button-primary:hover, body .uk-button-pr
 }
 body .search-widget .uk-search-default .uk-button{
     border-radius: 0px 9px 9px 0px;
-    min-width: 145px;  
+    min-width: 145px;
     font-size: 16px;
     line-height: 158.2%;
 }
@@ -543,7 +543,7 @@ body .uk-link, body a {
     padding-left: 35px;
     background: url(/images/hdr-phone.png) no-repeat left;
 }
-.hdr-login{    
+.hdr-login{
 	margin-left: 65px;
 }
 .hdr-login a{
@@ -581,10 +581,10 @@ body .uk-navbar-nav >li>a {
     color: #fff;
 }
 body .uk-navbar-container:not(.uk-navbar-transparent) {
-    background: transparent;  
+    background: transparent;
     margin-left: 65px;
 }
-body .uk-h1, body .uk-h2, body .uk-h3, body .uk-h4, 
+body .uk-h1, body .uk-h2, body .uk-h3, body .uk-h4,
 body h1, body h2, body h3, body h4{font-family: 'Montserrat', sans-serif}
 html {
     font-family: 'Montserrat', sans-serif !important;
@@ -614,7 +614,7 @@ body .uk-offcanvas-bar {
   appearance: none;
   width: 12px;
   height: 12px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #5BC3EB;
   cursor: pointer;
 }
@@ -625,6 +625,35 @@ body .uk-offcanvas-bar {
   background: #5BC3EB;
   cursor: pointer;
 }
-[class*="ymaps-2"][class*="-ground-pane"]{
+[class*="ymaps-2"][class*="-ground-pane"] {
     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
-    -webkit-filter:grayscale(100%);
+    -webkit-filter: grayscale(100%);
+}
+.uk-progress.progress-green::-webkit-progress-value {
+    background-color: LightGreen ;
+}
+.uk-progress.progress-green::-moz-progress-bar {
+    background-color: LightGreen ;
+}
+.uk-progress.progress-green::-ms-fill {
+    background-color: LightGreen ;
+}
+.uk-progress.progress-blue::-webkit-progress-value {
+    background-color: #5BC3EB ;
+}
+.uk-progress.progress-blue::-moz-progress-bar {
+    background-color: #5BC3EB ;
+}
+.uk-progress.progress-blue::-ms-fill {
+    background-color: #5BC3EB ;
+}
+
+.uk-progress.progress-coral::-webkit-progress-value {
+    background-color: Coral;
+}
+.uk-progress.progress-coral::-moz-progress-bar {
+    background-color: Coral;
+}
+.uk-progress.progress-coral::-ms-fill {
+    background-color: Coral;
+}

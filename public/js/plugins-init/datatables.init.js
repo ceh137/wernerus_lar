@@ -48,9 +48,9 @@ let dataSet = [
     var table = $('#example').DataTable({
         createdRow: function ( row, data, index ) {
            $(row).addClass('selected')
-        } 
+        }
     });
-      
+
     table.on('click', 'tbody tr', function() {
     var $row = table.row(this).nodes().to$();
     var hasClass = $row.hasClass('selected');
@@ -60,7 +60,7 @@ let dataSet = [
         $row.addClass('selected')
     }
     })
-    
+
     table.rows().every(function() {
     this.nodes().to$().removeClass('selected')
     });
@@ -87,7 +87,7 @@ let dataSet = [
             $row.addClass('selected')
         }
     })
-        
+
     table2.rows().every(function() {
         this.nodes().to$().removeClass('selected')
     });
@@ -112,7 +112,7 @@ let dataSet = [
             $row.addClass('selected')
         }
     })
-        
+
     table3.rows().every(function() {
         this.nodes().to$().removeClass('selected')
     });
@@ -123,7 +123,7 @@ let dataSet = [
         createdRow: function ( row, data, index ) {
             $(row).addClass('selected')
         },
-        
+
         "scrollX": true
     });
 
@@ -136,7 +136,7 @@ let dataSet = [
             $row.addClass('selected')
         }
     })
-        
+
     table4.rows().every(function() {
         this.nodes().to$().removeClass('selected')
     });
@@ -165,14 +165,14 @@ let dataSet = [
         var title = $(this).text();
         $(this).html( '<input type="text"  placeholder="Search '+title+'" />' );
     } );
- 
+
     // DataTable - individual column searching by text
     var table = $('#example-api-1').DataTable();
- 
+
     // Apply the search
     table.columns().every( function () {
         var that = this;
- 
+
         $( 'input', this.footer() ).on( 'keyup change', function () {
             if ( that.search() !== this.value ) {
                 that
@@ -194,12 +194,12 @@ let dataSet = [
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
                         );
- 
+
                         column
                             .search( val ? '^'+val+'$' : '', true, false )
                             .draw();
                     } );
- 
+
                 column.data().unique().sort().each( function ( d, j ) {
                     select.append( '<option value="'+d+'">'+d+'</option>' )
                 } );
@@ -210,11 +210,11 @@ let dataSet = [
 
     //Row selection (multiple rows)
     var table = $('#example-api-3').DataTable();
- 
+
     $('#example-api-3 tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
     } );
- 
+
     $('#show-row').click( function () {
         alert( table.rows('.selected').data().length +' row(s) selected' );
     } );
@@ -223,7 +223,7 @@ let dataSet = [
     //Add new row
     var t = $('#example-api-4').DataTable();
     var counter = 1;
- 
+
     $('#addRow').on( 'click', function () {
         t.row.add( [
             counter +'.1',
@@ -232,17 +232,17 @@ let dataSet = [
             counter +'.4',
             counter +'.5'
         ] ).draw( false );
- 
+
         counter++;
     } );
- 
+
     // Automatically add a first row of data
     $('#addRow').click();
 
 
     //Form inputs
     var table = $('#example-api-5').DataTable();
- 
+
     $('#form-submit').click( function() {
         var data = table.$('input, select').serialize();
         alert(
@@ -258,13 +258,13 @@ let dataSet = [
         "scrollY": "200px",
         "paging": false
     } );
- 
+
     $('.toggle-vis').on( 'click', function (e) {
         e.preventDefault();
- 
+
         // Get the column API object
         var column = table.column( $(this).attr('data-column') );
- 
+
         // Toggle the visibility
         column.visible( ! column.visible() );
     });
@@ -278,7 +278,7 @@ let dataSet = [
             $('#global_smart').prop('checked')
         ).draw();
     }
-     
+
     function filterColumn ( i ) {
         $('#example-api-7').DataTable().column( i ).search(
             $('#col'+i+'_filter').val(),
@@ -288,11 +288,11 @@ let dataSet = [
     }
 
     $('#example-api-7').DataTable();
- 
+
     $('input.global_filter').on( 'keyup click', function () {
         filterGlobal();
     } );
- 
+
     $('input.column_filter').on( 'keyup click', function () {
         filterColumn( $(this).parents('tr').attr('data-column') );
     });
@@ -300,7 +300,7 @@ let dataSet = [
 
     //DOM / jQuery events
     var table = $('#example-advance-1').DataTable();
-     
+
     $('#example-advance-1 tbody').on('click', 'tr', function () {
         var data = table.row( this ).data();
         alert( 'You clicked on '+data[0]+'\'s row' );
@@ -311,17 +311,17 @@ let dataSet = [
     var eventFired = function ( type ) {
         var n = $('#demo_info')[0];
         n.innerHTML += '<div>'+type+' event - '+new Date().getTime()+'</div>';
-        n.scrollTop = n.scrollHeight;      
+        n.scrollTop = n.scrollHeight;
     }
- 
+
     $('#example-advance-2')
-        .on( 'order.dt',  function () { eventFired( 'Order' ); } )
+        .on( 'order_application.dt',  function () { eventFired( 'Order' ); } )
         .on( 'search.dt', function () { eventFired( 'Search' ); } )
         .on( 'page.dt',   function () { eventFired( 'Page' ); } )
         .DataTable();
 
 
-    
+
     //Language file
     $('#example-advance-3').DataTable( {
         "language": {
@@ -342,17 +342,17 @@ let dataSet = [
             return x + y;
         } );
     } );
-     
+
     /* Init the table and fire off a call to get the hidden nodes. */
-    
+
     var table = $('#example-plugin-1').DataTable();
-        
+
     $('<button class="btn btn-light mb-5">Click to sum age in all rows</button>')
         .prependTo( '#demo' )
         .on( 'click', function () {
             alert( 'Column sum is: '+ table.column( 3 ).data().sum() );
         } );
-    
+
     $('<button class="btn btn-light mb-5 mr-4">Click to sum age of visible rows</button>')
         .prependTo( '#demo' )
         .on( 'click', function () {
@@ -363,14 +363,14 @@ let dataSet = [
 
 
 
-    
+
     //Custom filtering - range search
     $.fn.dataTable.ext.search.push(
         function( settings, data, dataIndex ) {
             var min = parseInt( $('#min').val(), 10 );
             var max = parseInt( $('#max').val(), 10 );
             var age = parseFloat( data[3] ) || 0; // use data for the age column
-        
+
             if ( ( isNaN( min ) && isNaN( max ) ) ||
                     ( isNaN( min ) && age <= max ) ||
                     ( min <= age   && isNaN( max ) ) ||
@@ -381,14 +381,14 @@ let dataSet = [
             return false;
         }
     );
-    
+
     var table = $('#example-plugin-2').DataTable();
-        
+
     // Event listener to the two range filtering inputs to redraw on input
     $('#min, #max').keyup( function() {
         table.draw();
     });
-        
+
 
 
     //Live DOM ordering
@@ -398,7 +398,7 @@ let dataSet = [
             return $('input', td).val();
         } );
     }
-    
+
     /* Create an array with the values of all the input boxes in a column, parsed as numbers */
     $.fn.dataTable.ext.order['dom-text-numeric'] = function  ( settings, col )
     {
@@ -406,7 +406,7 @@ let dataSet = [
             return $('input', td).val() * 1;
         } );
     }
-    
+
     /* Create an array with the values of all the select options in a column */
     $.fn.dataTable.ext.order['dom-select'] = function  ( settings, col )
     {
@@ -414,7 +414,7 @@ let dataSet = [
             return $('select', td).val();
         } );
     }
-    
+
     /* Create an array with the values of all the checkboxes in a column */
     $.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
     {
@@ -422,7 +422,7 @@ let dataSet = [
             return $('input', td).prop('checked') ? '1' : '0';
         } );
     }
-    
+
     /* Initialise the table with the required column ordering data types */
     $(document).ready(function() {
         $('#example-plugin-3').DataTable( {
@@ -437,5 +437,5 @@ let dataSet = [
 
 
 
-    
+
 })(jQuery);

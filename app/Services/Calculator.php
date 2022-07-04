@@ -76,6 +76,8 @@ class Calculator
                         'INN' => $data['payments']['sender']['INN'],
                         'name' => $data['payments']['sender']['company'],
                     ]);
+                    $sender->company_id = $sender_comp->id;
+                    $sender->save();
                 }
 
                 $receiver = User::updateOrCreate([
@@ -94,6 +96,8 @@ class Calculator
                         'INN' => $data['payments']['receiver']['INN'],
                         'name' => $data['payments']['receiver']['company'],
                     ]);
+                    $receiver->company_id = $receiver_comp->id;
+                    $receiver->save();
                 }
 
 
@@ -114,6 +118,8 @@ class Calculator
                             'INN' => $data['payments']['third_party']['INN'],
                             'name' => $data['payments']['third_party']['company'],
                         ]);
+                        $third_party->company_id = $third_party_comp->id;
+                        $third_party->save();
                     }
                 }
 
@@ -275,6 +281,8 @@ class Calculator
                     'INN' => $data['payments']['sender']['INN'],
                     'name' => $data['payments']['sender']['company'],
                 ]);
+                $sender->company_id = $sender_comp->id;
+                $sender->save();
             }
 
             $receiver = User::find($order->receiver_id)->update([
@@ -289,6 +297,8 @@ class Calculator
                     'INN' => $data['payments']['receiver']['INN'],
                     'name' => $data['payments']['receiver']['company'],
                 ]);
+                $receiver->company_id = $receiver_comp->id;
+                $receiver->save();
             }
 
             if ($data['payments']['third_party']['name']) {
@@ -304,6 +314,8 @@ class Calculator
                         'INN' => $data['payments']['third_party']['INN'],
                         'name' => $data['payments']['third_party']['company'],
                     ]);
+                    $third_party->company_id = $third_party_comp->id;
+                    $third_party->save();
                 }
             }
 

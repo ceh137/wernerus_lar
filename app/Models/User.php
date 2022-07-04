@@ -24,6 +24,7 @@ class User extends Authenticatable
         'is_phys',
         'role_id',
         'password',
+        'company_id'
     ];
 
     /**
@@ -47,5 +48,8 @@ class User extends Authenticatable
 
     public function role() {
         return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+    public function company() {
+        return $this->hasOne(Company::class, 'id', 'company_id');
     }
 }

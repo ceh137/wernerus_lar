@@ -10,7 +10,7 @@ use App\Models\WhoPays;
 use App\Services\Calculator;
 use Illuminate\Http\Request;
 
-class OrderController extends Controller
+class ApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('admin.index');
+        return view('admin.applications');
     }
 
     /**
@@ -72,11 +72,11 @@ class OrderController extends Controller
         $comps = ['sender' =>'sender_comp', 'receiver' =>'receiver_comp','third_party' => 'tp_comp'];
         try {
             foreach ($people as $k=>$v) {
-                if (!is_null($order->{$comps[$k]}) && !is_null($order->{$v})) {
+                if (!is_null($order->{$comps[$k]}) && !is_null($order->{$v}) && !is_null($order->{$v.'_id'}) && !is_null($order->{$comps[$k].'any_id'})) {
                     $data['payments'][$k] = [
-                        'INN' => $order->{$comps[$k]}->INN,
-                        'company' => $order->{$comps[$k]}->name,
-                        'name' => $order->{$v}->name,
+                        'INN' => $order->{$comps[$k]}->INN ?? '',
+                        'company' => $order->{$comps[$k]}->name ?? '',
+                        'name' => $order->{$v}->name ?? '',
                         'tel' => $order->{$v}->telnum,
                         'email' => $order->{$v}->email,
                         'pay_all' => $order->who_pays->total == $order->{$v}->id ?? false,
@@ -96,22 +96,42 @@ class OrderController extends Controller
                         }
                     }
                 } else {
-                    $data['payments'][$k] = [
-                        'INN' => '',
-                        'company' => '',
-                        'name' => $order->{$v}->name,
-                        'tel' => $order->{$v}->telnum,
-                        'email' => $order->{$v}->email,
-                        'pay_all' => $order->who_pays->total == $order->{$v}->id ?? false,
-                        'pay_TT' => $order->who_pays->TT == $order->{$v}->id ?? false,
-                        'pay_pac' => $order->who_pays->package == $order->{$v}->id ?? false,
-                        'pay_ins' => $order->who_pays->insurance == $order->{$v}->id ?? false,
-                        'pay_del_to_addr' => $order->who_pays->to_addr == $order->{$v}->id ?? false,
-                        'pay_del_from_addr' => $order->who_pays->from_addr == $order->{$v}->id ?? false,
-                        'pay_PRR_to_addr' => $order->who_pays->prr_to_addr == $order->{$v}->id ?? false,
-                        'pay_PRR_from_addr' => $order->who_pays->prr_from_addr == $order->{$v}->id ?? false,
-                        'subtotal' => 0
-                    ];
+                    if (!is_null($order->{$v}) && !is_null($order->{$v.'_id'})) {
+                        $data['payments'][$k] = [
+                            'INN' => '',
+                            'company' => '',
+                            'name' => $order->{$v}->name,
+                            'tel' => $order->{$v}->telnum,
+                            'email' => $order->{$v}->email,
+                            'pay_all' => $order->who_pays->total == $order->{$v}->id ?? false,
+                            'pay_TT' => $order->who_pays->TT == $order->{$v}->id ?? false,
+                            'pay_pac' => $order->who_pays->package == $order->{$v}->id ?? false,
+                            'pay_ins' => $order->who_pays->insurance == $order->{$v}->id ?? false,
+                            'pay_del_to_addr' => $order->who_pays->to_addr == $order->{$v}->id ?? false,
+                            'pay_del_from_addr' => $order->who_pays->from_addr == $order->{$v}->id ?? false,
+                            'pay_PRR_to_addr' => $order->who_pays->prr_to_addr == $order->{$v}->id ?? false,
+                            'pay_PRR_from_addr' => $order->who_pays->prr_from_addr == $order->{$v}->id ?? false,
+                            'subtotal' => 0
+                        ];
+                    } else {
+                        $data['payments'][$k] = [
+                            'INN' => '',
+                            'company' => '',
+                            'name' => '',
+                            'tel' => '',
+                            'email' => '',
+                            'pay_all' => false,
+                            'pay_TT' =>  false,
+                            'pay_pac' =>  false,
+                            'pay_ins' =>  false,
+                            'pay_del_to_addr' =>  false,
+                            'pay_del_from_addr' =>  false,
+                            'pay_PRR_to_addr' =>  false,
+                            'pay_PRR_from_addr' =>  false,
+                            'subtotal' => 0
+                        ];
+                    }
+
 
                     foreach ($data['payments'][$k] as $key => $val) {
                         if ($val == null) {
@@ -127,9 +147,9 @@ class OrderController extends Controller
         $order->toArray();
         $order['payments'] = $data['payments'];
         $data = json_encode($order);
-//        dd($data);
+//        dd($id);
 
-        return view('admin.order.edit', compact('data'));
+        return view('admin.order_application.edit', compact('data'));
     }
 
     /**
@@ -155,11 +175,11 @@ class OrderController extends Controller
     public function destroy($id)
     {
 //        try {
-//            $order = Order::find($id);
-//            $who_pays = WhoPays::find($order->who_pays_id)->delete();
-//            $order_prices = OrderPrice::($order->order_price_id)->delete();
-//            $files  = File::find($order->files_id)->delete();
-//            $order->delete();
+//            $order_application = Order::find($id);
+//            $who_pays = WhoPays::find($order_application->who_pays_id)->delete();
+//            $order_prices = OrderPrice::($order_application->order_price_id)->delete();
+//            $files  = File::find($order_application->files_id)->delete();
+//            $order_application->delete();
 //            return redirect()->route('admin.orders.index')->with(['success'=>true]);
 //        } catch (\Exception $e) {
 //            return redirect()->route('admin.orders.index')->with(['error'=>$e->getMessage()]);

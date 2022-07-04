@@ -461,9 +461,16 @@ let mins = {
     "MSKtoYAKUTS": 2717,
     "MSKtoYALTA": 7626,
     "MSKtoYALUTO": 2625,
-    "MSKtoYAROSL": 2501
+    "MSKtoYAROSL": 2501,
+    "MSKtoHELS": 5000,
 }
-let cities = {msk:
+let cities = {
+    helsinki:
+        {
+            name: 'Хельсинки',
+            code: 'HELS',
+        },
+    msk:
         {
             name: 'Москва',
             code: 'MSK',
@@ -921,10 +928,83 @@ const delivery_time = {
     "MSKtoYAKUTS": {from: 40, to:45},
     "MSKtoYALTA": {from: 4, to:6},
     "MSKtoYALUTO": {from: 5, to:7},
-    "MSKtoYAROSL": {from: 2, to:3}
+    "MSKtoYAROSL": {from: 2, to:3},
+    "MSKtoHELS" : {
+        from: 5,
+        to: 10
+    }
 }
 
 const array  = {
+    'MSKtoHELSeconom': {
+        price: {
+            'docs': {
+                send: 150, bort: 100, rigidPac: 500, stretchPac: 50, insurance: 30
+            },
+            'single': {
+                send: 300, bort: 150, rigidPac: 500, stretchPac: 100, insurance: 50
+            },
+            'minP': {
+                send: 500, bort: 200, rigidPac: 500, stretchPac: 100, insurance: 50
+            },
+            '5m-': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            },
+            '5m+': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            },
+            '10m+': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            },
+            '30m+': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            },
+            '40m+': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            },
+            '50m+': {
+                forunit: 10000, bort: 300, rigidPac: 900, stretchPac: 100, insPerKG: 0.1
+            }
+        },
+        ADprice: {
+            'docs': {
+                toAddress: 240, fromAddress: 240
+            },
+            'single': {
+                toAddress: 450, fromAddress: 450
+            },
+            'minP': {
+                toAddress: 600, fromAddress: 700
+            },
+            'upTo1m': {
+                toAddress: 800, fromAddress: 900
+            },
+            'upTo3m': {
+                toAddress: 1300, fromAddress: 1600
+            },
+            'upTo5m': {
+                toAddress: 1800, fromAddress: 2000
+            },
+            'upTo7m': {
+                toAddress: 2800, fromAddress: 3200
+            },
+            'upTo10m': {
+                toAddress: 4700, fromAddress: 5200
+            },
+            'upTo20m': {
+                toAddress: 6200, fromAddress: 6700
+            },
+            'upTo30m': {
+                toAddress: 8000, fromAddress: 8100
+            },
+            'upTo40m': {
+                toAddress: 8000, fromAddress: 8100
+            },
+            '40m+': {
+                toAddress: 10000, fromAddress: 12000
+            }
+        }
+    },
     'MSKtoSPBexpress': {
         price: {
             'docs': {

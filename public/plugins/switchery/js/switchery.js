@@ -318,7 +318,7 @@ Switchery.prototype.isDisabled = function() {
 /**
  * Set switch jack proper position.
  *
- * @param {Boolean} clicked - we need this in order to uncheck the input when the switch is clicked
+ * @param {Boolean} clicked - we need this in order_application to uncheck the input when the switch is clicked
  * @api private
  */
 

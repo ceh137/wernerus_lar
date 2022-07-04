@@ -217,7 +217,7 @@
        <div class="col-span-2">
            <a wire:click='$emit("openModal", "delete-order", {{ json_encode(["id" => $order->id]) }})' href="#" class="bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm">Удалить</a>
            <a wire:click='$emit("openModal", "application-to-order-modal", {{ json_encode(["id" => $order->id]) }})' href="#" class="bg-green-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm">Перевести в заказ</a>
-           <a  href="{{ route('admin.orders.*.edit', ['order' => $order->id]) }}" class="bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm">Редактировать</a>
+           <a  href="{{ route('admin.application.edit', ['application' => $order->id]) }}" class="bg-indigo-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm">Редактировать</a>
        </div>
    </div>
 </div>

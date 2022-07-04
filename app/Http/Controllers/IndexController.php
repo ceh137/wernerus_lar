@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\City;
+use App\Models\Order;
 use App\Models\Route;
 use App\Services\Calculator;
 use Illuminate\Http\Request;
@@ -65,5 +67,17 @@ class IndexController extends Controller
 //            return json_encode([$exception->getMessage(), $SPB, $MSK]);
 //        }
 
+    }
+
+    public function status(Request $request) {
+
+        $order = Order::where('order_num', '=', $request->order_num)->first();
+        $order_num = $request->order_num;
+
+        if ($order) {
+            return view('index.status', compact('order', 'order_num'));
+        } else {
+            return view('index.status', compact('order_num'))->with(['error' => 'order_not_found']);
+        }
     }
 }
