@@ -320,29 +320,21 @@ example input" aria-describedby="lableworth"
                                         косметика)</option>
                                     <option
                                         value="Оборудование/Электрооборудование/комплектующие">Оборудование/Электрооборудование/комплектующие</option>
-                                    <option value="Автозапчасти, аксессуары, Авто/Мото
-и др. Техника">Автозапчасти, аксессуары,
+                                    <option value="Автозапчасти, аксессуары, Авто/Мото и др. Техника">Автозапчасти, аксессуары,
                                         Авто/Мото и др. Техника</option>
-                                    <option value="Оргтехника, аудио/видео/бытовая
-техника, комплектующие">Оргтехника,
+                                    <option value="Оргтехника, аудио/видео/бытовая техника, комплектующие">Оргтехника,
                                         аудио/видео/бытовая техника, комплектующие</option>
-                                    <option value="Мебель/комплектующие/мебель в
-сборе/мягкая мебель">Мебель/комплектующие/мебель
+                                    <option value="Мебель/комплектующие/мебель в сборе/мягкая мебель">Мебель/комплектующие/мебель
                                         в сборе/мягкая мебель</option>
-                                    <option value="Строй материалы, сантехника,
-инструменты">Строй материалы, сантехника,
+                                    <option value="Строй материалы, сантехника, инструменты">Строй материалы, сантехника,
                                         инструменты</option>
-                                    <option value="Мед. товар/пищевые
-добавки/спортивное питание">Мед. товар/пищевые
+                                    <option value="Мед. товар/пищевые добавки/спортивное питание">Мед. товар/пищевые
                                         добавки/спортивное питание</option>
-                                    <option value="Стекло/автостекло/оконные/дверные
-рамы со стеклом">Стекло/автостекло/оконные/дверные
+                                    <option value="Стекло/автостекло/оконные/дверные рамы со стеклом">Стекло/автостекло/оконные/дверные
                                         рамы со стеклом</option>
                                     <option value="Жидкости в бочках/канистрах">Жидкости
                                         в бочках/канистрах</option>
-                                    <option value="Хрупкие предметы
-интерьера/сувениры, изделия из
-камня/мрамор/гранит">Хрупкие предметы
+                                    <option value="Хрупкие предметы интерьера/сувениры, изделия из камня/мрамор/гранит">Хрупкие предметы
                                         интерьера/сувениры, изделия из
                                         камня/мрамор/гранит</option>
                                     <option value="Личные вещи">Личные вещи</option>
@@ -795,6 +787,9 @@ uk-radio PayPRRtoAddress 3dparty"
             id="amount_receiver" type="hidden"> <input
             id="amount_3dparty" type="hidden"> <input id="totalhidden"
                                                       type="hidden"> </form>
+
+<!--        <button v-on:click="saveRoutes" type="button"-->
+<!--                class="uk-button uk-button-primary btn-order">ОТПРАВИТЬ UJHJlf</button>-->
     </div>
 </template>
 
@@ -805,7 +800,11 @@ export default {
        order: {
            default: {},
            type: Object
-       }
+       },
+        to_order: {
+            default: false,
+            type: Boolean
+        }
     },
     data() {
         return {
@@ -953,7 +952,28 @@ export default {
         }
     },
     methods: {
-
+        saveCities() {
+            axios.post('/save_cities', {   cities : this.to_cities, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }).then(function (response) {
+                console.log(response.data);
+                alert(response.data);
+                window.location.href = '/';
+            }).catch(function (response) {
+                console.log(response.data);
+                alert(response.data);
+            });
+        },
+        saveRoutes() {
+            axios.post('/route_save', {   cities : this.to_cities, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }).then(function (response) {
+                console.log(response.data);
+                alert(response.data);
+                window.location.href = '/';
+            }).catch(function (response) {
+                console.log(response.data);
+                alert(response.data);
+            });
+        },
         submitForm() {
             if (this.validatePrice()) {
                 let selFromCity = '';
@@ -1021,15 +1041,17 @@ export default {
                 };
                 console.log(dataToSubmit)
                 if (window.location.pathname.split("/").pop() == 'edit') {
-                    axios.put('/admin/orders/'+this.order.id, {
+                    axios.put('/admin/application/'+this.order.id, {
+                        to_order: this.to_order,
                         data: dataToSubmit,
                         _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     }).then(function (response) {
                         console.log(response);
-                        window.location.href = '/admin/orders/';
+                        alert(response.data);
+                        window.location.href = '/admin/application/';
                     })
                 } else {
-                    axios.post('/order', {data : dataToSubmit, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    axios.post('/order', {   to_order: this.to_order, data : dataToSubmit, _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     }).then(function (response) {
                         console.log(response.data);
                         alert(response.data);

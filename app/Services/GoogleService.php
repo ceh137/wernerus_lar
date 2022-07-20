@@ -11,15 +11,10 @@ class GoogleService
     private $client;
     private $googleSheetService;
 
-    public function __construct($table)
+    public function __construct()
     {
-        if ($table == 'check') {
-            $this->spreadSheetId  = config('google.google_checklist_id');
-        } elseif ($table == 'works') {
-            $this->spreadSheetId  = config('google.google_checklist_id');
-        }
 
-
+        $this->spreadSheetId = '1Jkzr5gmkrEkPAzPsgXgQSRBi_pNEKbyiEa6zX1N7jJw';
         $this->client= new Google_Client();
         $this->client->setAuthConfig(storage_path('credentials.json'));
         $this->client->addScope('https://www.googleapis.com/auth/spreadsheets');

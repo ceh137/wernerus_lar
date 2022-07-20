@@ -38,9 +38,9 @@ return [
             'js'      => 'https://cdn.jsdelivr.net/npm/flatpickr',
             'css'     => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
             'locales' => [
-                'eng' => [
-                    'locale'     => "eng",
-                    'dateFormat' => 'DD/MM/YYYY hh:mm:ss',
+                'rus' => [
+                    'locale'     => "rus",
+                    'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => false,
                     'time_24hr'  => true,
                 ],
@@ -97,6 +97,6 @@ return [
     |
     */
 
-    'check_version' => false,
+    'check_version' => true,
 
 ];

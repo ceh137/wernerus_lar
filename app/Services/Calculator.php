@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\City;
 use App\Models\Company;
+use App\Models\Customer;
 use App\Models\File;
 use App\Models\Order;
 use App\Models\OrderPrice;
@@ -56,17 +57,14 @@ class Calculator
                 try {
                     $type = Type::where('name', '=', $data['cargo_type'])->first()->id;
                 } catch (\Exception $e) {
-                    $type = 1;
+                    $type = 11;
                 }
 
-                $sender =  User::updateOrCreate(
-                    ['email' => $data['payments']['sender']['email'],],
+                $sender =  Customer::create(
                     [
                     'name' => $data['payments']['sender']['name'],
                     'email' => $data['payments']['sender']['email'],
                     'telnum' => $data['payments']['sender']['tel'],
-                    'is_phys' => $data['payments']['sender']['INN'] == '',
-                    'role_id' => 1
                 ]);
 
                 if ($data['payments']['sender']['INN'] != '') {
@@ -80,14 +78,10 @@ class Calculator
                     $sender->save();
                 }
 
-                $receiver = User::updateOrCreate([
-                    'email' => $data['payments']['receiver']['email'],
-                ],[
+                $receiver = Customer::create([
                     'name' => $data['payments']['receiver']['name'],
                     'email' => $data['payments']['receiver']['email'],
                     'telnum' => $data['payments']['receiver']['tel'],
-                    'is_phys' => $data['payments']['receiver']['INN'] == '',
-                    'role_id' => 1
                 ]);
                 if ($data['payments']['receiver']['INN'] != '') {
                     $receiver_comp = Company::updateOrCreate([
@@ -102,14 +96,10 @@ class Calculator
 
 
                 if ($data['payments']['third_party']['name']) {
-                    $third_party = User::updateOrCreate([
-                        'email' => $data['payments']['third_party']['email'],
-                    ],[
+                    $third_party = Customer::create([
                         'name' => $data['payments']['third_party']['name'],
                         'email' => $data['payments']['third_party']['email'],
                         'telnum' => $data['payments']['third_party']['tel'],
-                        'is_phys' => $data['payments']['third_party']['INN'] == '',
-                        'role_id' => 1
                     ]);
                     if ($data['payments']['third_party']['INN'] != '') {
                         $third_party_comp = Company::updateOrCreate([
@@ -165,9 +155,9 @@ class Calculator
                 $who_pays->save();
 
                 if ($data['express']) {
-                    $method = 2;
+                    $method = 1;
                 } else {
-                    $method = 3;
+                    $method = 2;
                 }
 
                 $order = [
@@ -268,16 +258,16 @@ class Calculator
                 $type = 1;
             }
 
-            $sender =  User::find($order->sender_id)->update([
+            $sender =  Customer::find($order->sender_id);
+            $sender->update([
                 'name' => $data['payments']['sender']['name'],
                 'email' => $data['payments']['sender']['email'],
                 'telnum' => $data['payments']['sender']['tel'],
-                'is_phys' => $data['payments']['sender']['INN'] == '',
-                'role_id' => 1
             ]);
 
             if ($data['payments']['sender']['INN'] != '') {
-                $sender_comp = Company::find($order->sender_company_id)->update([
+                $sender_comp = Company::find($order->sender_company_id);
+                $sender_comp->update([
                     'INN' => $data['payments']['sender']['INN'],
                     'name' => $data['payments']['sender']['company'],
                 ]);
@@ -285,15 +275,15 @@ class Calculator
                 $sender->save();
             }
 
-            $receiver = User::find($order->receiver_id)->update([
+            $receiver = Customer::find($order->receiver_id);
+            $receiver->update([
                 'name' => $data['payments']['receiver']['name'],
                 'email' => $data['payments']['receiver']['email'],
                 'telnum' => $data['payments']['receiver']['tel'],
-                'is_phys' => $data['payments']['receiver']['INN'] == '',
-                'role_id' => 1
             ]);
             if ($data['payments']['receiver']['INN'] != '') {
-                $receiver_comp = Company::find($order->receiver_company_id)->update([
+                $receiver_comp = Company::find($order->receiver_company_id);
+                $receiver_comp->update([
                     'INN' => $data['payments']['receiver']['INN'],
                     'name' => $data['payments']['receiver']['company'],
                 ]);
@@ -301,16 +291,16 @@ class Calculator
                 $receiver->save();
             }
 
-            if ($data['payments']['third_party']['name']) {
-                $third_party = User::find($order->tp_id)->update([
+            if ($data['payments']['third_party']['name'] != '') {
+                $third_party = Customer::find($order->tp_id);
+                $third_party->update([
                     'name' => $data['payments']['third_party']['name'],
                     'email' => $data['payments']['third_party']['email'],
                     'telnum' => $data['payments']['third_party']['tel'],
-                    'is_phys' => $data['payments']['third_party']['INN'] == '',
-                    'role_id' => 1
                 ]);
                 if ($data['payments']['third_party']['INN'] != '') {
-                    $third_party_comp = Company::find($order->tp_company_id)->update([
+                    $third_party_comp = Company::find($order->tp_company_id);
+                    $third_party_comp->update([
                         'INN' => $data['payments']['third_party']['INN'],
                         'name' => $data['payments']['third_party']['company'],
                     ]);
@@ -359,9 +349,9 @@ class Calculator
 
 
             if ($data['express']) {
-                $method = 2;
+                $method = 1;
             } else {
-                $method = 3;
+                $method = 2;
             }
 
             $order_info = [

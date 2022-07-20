@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppToOrder;
 use App\Models\File;
 use App\Models\Order;
 use App\Models\OrderPrice;
 use App\Models\WhoPays;
 use App\Services\Calculator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends Controller
 {
@@ -148,8 +150,9 @@ class ApplicationController extends Controller
         $order['payments'] = $data['payments'];
         $data = json_encode($order);
 //        dd($id);
+        $to_order = Session::get('to_order') ?? false;
 
-        return view('admin.order_application.edit', compact('data'));
+        return view('admin.order_application.edit', compact('data', 'to_order'));
     }
 
     /**
@@ -162,6 +165,20 @@ class ApplicationController extends Controller
     public function update(Request $request, $id)
     {
         $calc = new Calculator();
+        if ($request['to_order'] === true) {
+            $order_id = $calc->update($id , $request['data']);
+            $app_to_order = new AppToOrder();
+            $app_to_order->order_id = $order_id;
+            $app_to_order->save();
+            $app_to_order->order_num = (new \App\Services\TrackNum)->getTrackNum($app_to_order->id);
+            $app_to_order->save();
+            $order = Order::find($order_id);
+            $order->order_num = $app_to_order->order_num;
+            $order->status_id = 2;
+            $order->time_to_order = now('Europe/Moscow');
+
+            return $order->save();
+        }
         return $calc->update($id , $request['data']);
 
     }

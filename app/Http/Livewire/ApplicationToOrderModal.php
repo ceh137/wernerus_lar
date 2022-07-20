@@ -3,10 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\AppToOrder;
+use App\Models\Debt;
 use App\Models\Order;
 use App\Services\TrackNum;
 use Carbon\Carbon;
 use Google\Service\AdMob\App;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use LivewireUI\Modal\ModalComponent;
 
@@ -16,6 +18,8 @@ class ApplicationToOrderModal extends ModalComponent
     public Order $order;
     public string $confirmationTitle = '';
     public string $trackNum ='';
+
+
 
     public static function modalMaxWidth(): string{
         return "7xl";
@@ -36,7 +40,8 @@ class ApplicationToOrderModal extends ModalComponent
 
     public function confirm()
     {
-//        try {
+        try {
+        DB::beginTransaction();
             $app_to_order = new AppToOrder();
             $app_to_order->order_id = $this->order->id;
             $app_to_order->save();
@@ -46,9 +51,17 @@ class ApplicationToOrderModal extends ModalComponent
             $this->order->time_to_order = now('Europe/Moscow');
             $this->order->order_num = $app_to_order->order_num;
             $this->order->save();
-//        } catch (\Exception $e) {
-//            return $e->getMessage();
-//        }
+            $debt = new Debt();
+            $debt->order_id = $this->order->id;
+            $debt->amount = $this->order->order_prices->total;
+            $debt->debt_status_id = 10;
+            $debt->is_in_debt = true;
+            $debt->save();
+           DB::commit();
+        } catch (\Exception $e) {
+          DB::rollBack();
+            return $e->getMessage();
+        }
 
 
         $this->closeModalWithEvents([

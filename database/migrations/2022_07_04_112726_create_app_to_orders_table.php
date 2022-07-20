@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('manager_id')->nullable()->references('id')->on('users');
+        Schema::create('app_to_orders', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->references('id')->on('orders');
+            $table->string('order_num')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('app_to_orders');
     }
 };

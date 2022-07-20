@@ -1,0 +1,1 @@
+{"error":{"details":"There was an error with one or more parts of the instructions.","failingPaths":[{"details":"must be a valid JSON object","path":"$.instructions"}],"requestId":"FwGxz1YqOJQ4w0oAG0mR","status":400,"supportUrl":"https://pspdfkit.com/api/support/"}}

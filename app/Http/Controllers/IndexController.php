@@ -42,30 +42,40 @@ class IndexController extends Controller
         return view('index.contacts');
     }
 
+    public function save_cities(Request $request) {
+        foreach ($request->cities as $city) {
+            $new_ct = new City();
+            $new_ct->code = $city['code'];
+            $new_ct->name = $city['name'];
+            $new_ct->save();
+        }
+        return $new_ct->id;
+    }
+
     public function save_routes(Request $request) {
 
-//        try {
-//            $SPB = City::where('code', '=', 'SPB')->get('id');
-//            $MSK = City::where('code', '=', 'MSK')->get('id');
-//
-//            $cities = City::all();
-//
-//            foreach ($cities as $city) {
-//                $route = new Route();
-//                $route->from_city_id = $SPB[0]['id'];
-//                $route->to_city_id = $city->id;
-//                $route->save();
-//        }
-//            foreach ($cities as $city) {
-//                $route = new Route();
-//                $route->from_city_id = $MSK[0]['id'];
-//                $route->to_city_id = $city->id;
-//                $route->save();
-//            }
-//            return Route::all();
-//        } catch (\Exception $exception) {
-//            return json_encode([$exception->getMessage(), $SPB, $MSK]);
-//        }
+        try {
+            $SPB = City::where('code', '=', 'SPB')->get('id');
+            $MSK = City::where('code', '=', 'MSK')->get('id');
+
+            $cities = City::all();
+
+            foreach ($cities as $city) {
+                $route = new Route();
+                $route->from_city_id = $SPB[0]['id'];
+                $route->to_city_id = $city->id;
+                $route->save();
+            }
+            foreach ($cities as $city) {
+                $route = new Route();
+                $route->from_city_id = $MSK[0]['id'];
+                $route->to_city_id = $city->id;
+                $route->save();
+            }
+            return Route::all();
+        } catch (\Exception $exception) {
+            return json_encode([$exception->getMessage(), $SPB, $MSK]);
+        }
 
     }
 

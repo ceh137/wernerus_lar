@@ -49,6 +49,8 @@ class Order extends Model
                 'address_to',
                 'address_from',
                 'time_to_order',
+                'created_at',
+                'updated_at'
             ];
 
     public function order_prices() {
@@ -58,13 +60,13 @@ class Order extends Model
         return $this->hasOne(Route::class, 'id', 'route_id');
     }
     public function sender() {
-        return $this->hasOne(User::class, 'id', 'sender_id');
+        return $this->hasOne(Customer::class, 'id', 'sender_id');
     }
     public function receiver() {
-        return $this->hasOne(User::class, 'id', 'receiver_id');
+        return $this->hasOne(Customer::class, 'id', 'receiver_id');
     }
     public function tp() {
-        return $this->hasOne(User::class, 'id', 'tp_id');
+        return $this->hasOne(Customer::class, 'id', 'tp_id');
     }
 
     public function sender_comp() {
@@ -97,4 +99,11 @@ class Order extends Model
         return $this->hasOne(OrderStatus::class, 'id', 'status_id');
     }
 
+    public function app_to_order() {
+        return $this->belongsTo(AppToOrder::class, 'order_id', 'id');
+    }
+
+    public function debt() {
+        return $this->belongsTo(Debt::class, 'id', 'order_id');
+    }
 }

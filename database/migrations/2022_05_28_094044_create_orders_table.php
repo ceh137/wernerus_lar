@@ -47,9 +47,9 @@ return new class extends Migration
 //            $table->unsignedBigInteger('order_price_id');
 //            $table->unsignedBigInteger('who_pays_id');
             $table->foreignId('type_id')->references('id')->on('types');
-            $table->foreignId('sender_id')->references('id')->on('users');
-            $table->foreignId('receiver_id')->references('id')->on('users');
-            $table->foreignId('tp_id')->references('id')->on('users');
+            $table->foreignId('sender_id')->references('id')->on('customers');
+            $table->foreignId('receiver_id')->references('id')->on('customers');
+            $table->foreignId('tp_id')->references('id')->on('customers');
             $table->foreignId('sender_company_id')->references('id')->on('companies');
             $table->foreignId('receiver_company_id')->references('id')->on('companies');
             $table->foreignId('tp_company_id')->references('id')->on('companies');

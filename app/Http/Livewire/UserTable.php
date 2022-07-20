@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
@@ -54,18 +55,17 @@ final class UserTable extends PowerGridComponent
     */
     public function datasource(): Builder
     {
-        return User::query()
-            ->where('users.role_id', '=', 1)
-            ->leftJoin('companies', 'users.company_id', '=', 'companies.id')
-            ->leftJoin('users as managers', 'users.manager_id', '=', 'managers.id')
+        return Customer::query()
+            ->leftJoin('companies', 'customers.company_id', '=', 'companies.id')
+            ->leftJoin('users as managers', 'customers.manager_id', '=', 'managers.id')
             ->select(
-                'users.id as id',
-                'users.name as name',
-                'users.telnum as telnum',
-                'users.email as email',
+                'customers.id as id',
+                'customers.name as name',
+                'customers.telnum as telnum',
+                'customers.email as email',
                 'companies.name as comp_name',
                 'companies.INN as INN',
-                'users.created_at as created_at',
+                'customers.created_at as created_at',
                 'managers.id as managers_id',
                 'managers.name as managers_name'
             )
@@ -108,7 +108,7 @@ final class UserTable extends PowerGridComponent
             ->addColumn('INN')
             ->addColumn('comp_name')
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn (User $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+            ->addColumn('created_at_formatted', fn (Customer $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -134,7 +134,7 @@ final class UserTable extends PowerGridComponent
 
             Column::make('ФИО', 'name')
                 ->searchable()
-                ->makeInputText('users.name')
+                ->makeInputText('customers.name')
                 ->sortable(),
 
             Column::make('Email', 'email')
@@ -144,7 +144,7 @@ final class UserTable extends PowerGridComponent
 
             Column::make('Номер Телефона', 'telnum')
                 ->searchable()
-                ->makeInputText('telnum')
+                ->makeInputText('customers.telnum')
                 ->sortable(),
 
             Column::make('ИНН', 'INN')

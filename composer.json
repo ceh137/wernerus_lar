@@ -6,14 +6,24 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-curl": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-mysqli": "*",
+        "ext-zend-opcache": "*",
         "asantibanez/livewire-select": "^2.1",
+        "barryvdh/laravel-snappy": "^1.0",
+        "defstudio/telegraph": "^1.14",
         "doctrine/dbal": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "laravel/fortify": "^1.13",
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
+        "longman/telegram-bot": "^0.78.0",
+        "milon/barcode": "^9.0",
         "power-components/livewire-powergrid": "^3.0",
         "revolution/laravel-google-sheets": "^6.0",
         "shanmuga/laravel-entrust": "^3.0",
@@ -31,6 +41,9 @@
         "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",

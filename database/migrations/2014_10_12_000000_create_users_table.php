@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('telnum');
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->boolean('is_phys')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

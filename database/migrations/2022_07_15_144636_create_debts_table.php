@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->nullable()->references('id')->on('orders');
             $table->foreignId('debt_status_id')->references('id')->on('debt_statuses');
+            $table->boolean('is_in_debt');
             $table->float('amount')->default(0);
             $table->timestamps();
         });

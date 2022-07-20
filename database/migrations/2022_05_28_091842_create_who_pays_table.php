@@ -24,14 +24,14 @@ return new class extends Migration
 //            $table->unsignedBigInteger('prr_from_addr');
 //            $table->unsignedBigInteger('total');
 
-            $table->foreignId('TT')->nullable()->references('id')->on('users');
-            $table->foreignId('to_addr')->nullable()->references('id')->on('users');
-            $table->foreignId('from_addr')->nullable()->references('id')->on('users');
-            $table->foreignId('package')->nullable()->references('id')->on('users');
-            $table->foreignId('insurance')->nullable()->references('id')->on('users');
-            $table->foreignId('prr_to_addr')->nullable()->references('id')->on('users');
-            $table->foreignId('prr_from_addr')->nullable()->references('id')->on('users');
-            $table->foreignId('total')->nullable()->references('id')->on('users');
+            $table->foreignId('TT')->nullable()->references('id')->on('customers');
+            $table->foreignId('to_addr')->nullable()->references('id')->on('customers');
+            $table->foreignId('from_addr')->nullable()->references('id')->on('customers');
+            $table->foreignId('package')->nullable()->references('id')->on('customers');
+            $table->foreignId('insurance')->nullable()->references('id')->on('customers');
+            $table->foreignId('prr_to_addr')->nullable()->references('id')->on('customers');
+            $table->foreignId('prr_from_addr')->nullable()->references('id')->on('customers');
+            $table->foreignId('total')->nullable()->references('id')->on('customers');
             $table->timestamps();
         });
     }

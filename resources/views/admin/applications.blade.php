@@ -123,7 +123,6 @@
         <div class="w-full overflow-hidden rounded-lg shadow-xs">
             <div class="w-full ">
                 <livewire:application-table></livewire:application-table>
-                <livewire:order-table></livewire:order-table>
             </div>
         </div>
 

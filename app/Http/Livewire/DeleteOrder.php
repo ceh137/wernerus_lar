@@ -22,7 +22,7 @@ class DeleteOrder extends ModalComponent
     public function render()
     {
 
-        return view('livewire.delete-order_application');
+        return view('livewire.delete-order');
     }
 
     public function cancel()

@@ -31,9 +31,11 @@ final class ApplicationTable extends PowerGridComponent
     use Listeners;
     public string $tableName = 'application_table';
     public string $primaryKey = 'id';
-    public string $sortField = 'orders.created_at';
+    public string $sortField = 'id';
     public string $delivery_type = "delivery_type";
     public string $address_from = "address_from";
+    public string $address_to = "address_to";
+
 
     public bool $ableToLoad = false;
 
@@ -121,9 +123,9 @@ final class ApplicationTable extends PowerGridComponent
             ->leftJoin('cities as to', 'routes.to_city_id', '=', 'to.id')
             ->leftJoin('cities as from', 'routes.from_city_id', '=', 'from.id')
             ->leftJoin('types', 'orders.type_id', '=', 'types.id')
-            ->leftJoin('users as sender', 'orders.sender_id', '=', 'sender.id')
-            ->leftJoin('users as receiver', 'orders.receiver_id', '=', 'receiver.id')
-            ->leftJoin('users as tp', 'orders.tp_id', '=', 'tp.id')
+            ->leftJoin('customers as sender', 'orders.sender_id', '=', 'sender.id')
+            ->leftJoin('customers as receiver', 'orders.receiver_id', '=', 'receiver.id')
+            ->leftJoin('customers as tp', 'orders.tp_id', '=', 'tp.id')
             ->leftJoin('companies as sender_company', 'orders.sender_company_id', '=', 'sender_company.id')
             ->leftJoin('companies as receiver_company', 'orders.receiver_company_id', '=', 'receiver_company.id')
             ->leftJoin('companies as tp_company', 'orders.tp_company_id', '=', 'tp_company.id')
@@ -178,9 +180,9 @@ final class ApplicationTable extends PowerGridComponent
     public function relationSearch(): array
     {
         return [
-            'cities' => ['name'],
-            'users' => ['name'],
-            'companies' => ['INN', 'name']
+//            'cities' => ['name'],
+//            'customers' => ['name'],
+//            'companies' => ['INN', 'name']
         ];
     }
 
@@ -229,67 +231,58 @@ final class ApplicationTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Вид Перевозки', 'method')
-                ->searchable()
                 ->makeInputSelect(Method::all(), 'name', 'methods.id')
                 ->sortable(),
 
             Column::make('Тип Доставки', 'delivery_type')
                 ->editOnClick()
-                ->searchable()
                 ->makeInputText('delivery_type')
                 ->sortable(),
 
             Column::make('Из', 'from_city')
-                ->searchable()
                 ->makeInputText('from.name')
                 ->sortable(),
 
             Column::make('В', 'to_city')
-                ->searchable()
                 ->makeInputText('to.name')
                 ->sortable(),
 
             Column::make('Адрес забора', 'address_from')
                 ->editOnClick()
-                ->searchable()
                 ->makeInputText('address_from')
                 ->sortable(),
 
             Column::make('Адрес Доставки', 'address_to')
                 ->editOnClick()
-                ->searchable()
                 ->makeInputText('address_to')
                 ->sortable(),
 
             Column::make('Отправитель', 'sender')
-                ->searchable()
                 ->makeInputText('sender.name')
                 ->sortable(),
+
+
             Column::make('ИНН отправ.', 'senderINN')
-                ->searchable()
                 ->makeInputText('sender_company.INN')
                 ->sortable(),
 
             Column::make('Получатель', 'receiver')
-                ->searchable()
                 ->makeInputText('receiver.name')
                 ->sortable(),
+
             Column::make('ИНН получ.', 'receiverINN')
-                ->searchable()
                 ->makeInputText('receiver_company.INN')
                 ->sortable(),
 
-//            Column::make('Третье Лицо', 'tp')
-//                ->searchable()
-//                ->makeInputText('tp.name')
-//                ->sortable(),
-//            Column::make('ИНН ТЛ', 'tpINN')
-//                ->searchable()
-//                ->makeInputText('tp_company.INN')
-//                ->sortable(),
+            Column::make('Третье Лицо', 'tp')
+                ->makeInputText('tp.name')
+                ->sortable(),
+
+            Column::make('ИНН ТЛ', 'tpINN')
+                ->makeInputText('tp_company.INN')
+                ->sortable(),
 
             Column::make('Итого', 'total')
-                ->searchable()
                 ->makeInputRange('total')
                 ->sortable(),
 
@@ -299,7 +292,6 @@ final class ApplicationTable extends PowerGridComponent
             Column::make('Дата создания', 'created_at_formatted', 'created_at')
                 ->sortable()
                 ->makeInputDatePicker('orders.created_at')
-                ->searchable()
         ];
     }
 
